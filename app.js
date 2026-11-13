@@ -17,6 +17,7 @@ function status(s) {
 function controls() {
   for (const n of document.querySelectorAll('button,input,select,textarea')) n.disabled = busy;
   $('cancel').disabled = !busy;
+  $('report').disabled = busy || !result;
   if (!busy) {
     $('previous').disabled = !result?.trace.length || step === 0;
     $('next').disabled = !result?.trace.length || step === result.trace.length - 1;
@@ -109,14 +110,14 @@ function render() {
   $('principal').textContent = result.ok
     ? result.principal
     : {
-        occurs: 'An infinite type.',
-        mismatch: 'Types disagree.',
-        unbound: 'A missing name.',
-        syntax: 'Check the syntax.',
-        limit: 'A smaller expression.',
+        occurs: 'Infinite type',
+        mismatch: 'Type mismatch',
+        unbound: 'Unbound name',
+        syntax: 'Syntax error',
+        limit: 'Analysis limit',
       }[result.error.kind] || 'Analysis stopped.';
   $('explanation').textContent = result.ok
-    ? 'The most general type inferred for this expression. No values were evaluated.'
+    ? ''
     : result.error.message + ' ' + location(result.error.start, result.error.end);
   $('counts').textContent =
     `${result.nodes.length} completed expressions · ${result.trace.length} constraints · ${result.bindings.length} let bindings`;
@@ -152,11 +153,12 @@ function render() {
   if (result.error) showDiagnostic();
   status(
     result.ok
-      ? 'Inference complete. Inspect a constraint or save the folio.'
+      ? ''
       : 'Analysis stopped at the first diagnostic. Earlier evidence remains inspectable.',
   );
 }
 function run() {
+  colorSource();
   clear();
   const ticket = revision,
     w = new Worker('worker.js', { type: 'module' });
@@ -190,6 +192,7 @@ function run() {
 $('source').value = source;
 $('source').addEventListener('input', () => {
   source = $('source').value;
+  colorSource();
   clear();
   status('Source changed. Infer again to update the evidence.');
 });
@@ -251,3 +254,32 @@ $('file').addEventListener('change', async () => {
   }
 });
 run();
+
+function colorSource() {
+  const value = $('source').value,
+    pattern =
+      /(--[^\n]*|\b(?:let|in|fun|if|then|else|fst|snd)\b|\b(?:true|false)\b|\b[0-9]+\b|->|==)/g;
+  const fragment = document.createDocumentFragment();
+  let last = 0;
+  for (const match of value.matchAll(pattern)) {
+    fragment.append(document.createTextNode(value.slice(last, match.index)));
+    const span = el('span', match[0]);
+    span.className = match[0].startsWith('--')
+      ? 'token-comment'
+      : /^\d/.test(match[0]) || ['true', 'false'].includes(match[0])
+        ? 'token-value'
+        : 'token-keyword';
+    fragment.append(span);
+    last = match.index + match[0].length;
+  }
+  fragment.append(document.createTextNode(value.slice(last) + '\n'));
+  $('code-color').replaceChildren(fragment);
+  $('code-color').scrollTop = $('source').scrollTop;
+  $('code-color').scrollLeft = $('source').scrollLeft;
+}
+$('source').addEventListener('scroll', () => {
+  $('code-color').scrollTop = $('source').scrollTop;
+  $('code-color').scrollLeft = $('source').scrollLeft;
+});
+$('language-open').onclick = () => $('language-panel').showModal();
+$('language-close').onclick = () => $('language-panel').close();

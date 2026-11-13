@@ -2,74 +2,67 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>Type Folio</title>
     <link rel="stylesheet" href="style.css" />
     <script type="module" src="app.js"></script>
   </head>
   <body>
     <header>
-      <a href="#">type folio<span>↳</span></a
-      ><span class="edition">PROGRAMMING LANGUAGES / STUDY NO. 01</span
-      ><label class="file"
-        >Open folio<input
-          id="file"
-          type="file"
-          accept="application/json,.json"
-          aria-label="Open folio"
-      /></label>
+      <h1>Type Folio<span>λ</span></h1>
+      <nav>
+        <label class="file"
+          >Open<input
+            id="file"
+            type="file"
+            accept="application/json,.json"
+            aria-label="Open folio" /></label
+        ><button id="save">Save</button
+        ><button id="language-open" aria-haspopup="dialog">Language</button>
+      </nav>
     </header>
     <main>
-      <section class="intro">
-        <p class="eyebrow">READ BETWEEN THE TYPES</p>
-        <h1>A little code.<br />A lot implied.</h1>
-        <p class="lede">Follow an expression from unknowns<br />to its most general type.</p>
-      </section>
-      <div class="workspace">
-        <section class="source">
-          <div class="section-head">
-            <label for="example">Start with a study</label
-            ><select id="example">
-              <option value="polymorphism">One function, two types</option>
-              <option value="composition">Function composition</option>
-              <option value="captured">Captured variables</option>
-              <option value="mismatch">Conflicting branches</option>
-              <option value="occurs">An infinite type</option>
-              <option value="lambda">The lambda boundary</option>
-            </select>
+      <section class="source">
+        <div class="section-head">
+          <label for="example">Example</label
+          ><select id="example">
+            <option value="polymorphism">One function, two types</option>
+            <option value="composition">Function composition</option>
+            <option value="captured">Captured variables</option>
+            <option value="mismatch">Conflicting branches</option>
+            <option value="occurs">An infinite type</option>
+            <option value="lambda">The lambda boundary</option>
+          </select>
+          <div class="actions">
+            <button id="infer" class="primary">Infer types</button
+            ><button id="cancel" disabled>Cancel</button
+            ><span id="source-note">Local analysis · no code execution</span>
           </div>
-          <label class="sr-only" for="source">Source expression</label
-          ><textarea
+        </div>
+        <label class="sr-only" for="source">Source expression</label>
+        <div class="editor">
+          <pre id="code-color" aria-hidden="true"></pre>
+          <textarea
             id="source"
             spellcheck="false"
             maxlength="12000"
             aria-describedby="source-note"
           ></textarea>
-          <div class="actions">
-            <button id="infer" class="primary">Infer types ↗</button
-            ><button id="cancel" disabled>Cancel</button
-            ><span id="source-note">Local analysis · no code execution</span>
-          </div>
-          <p id="status" role="status" aria-live="polite"></p>
-        </section>
-        <section class="verdict" aria-live="polite">
-          <p class="eyebrow" id="verdict-label">PRINCIPAL TYPE</p>
-          <div id="principal">—</div>
-          <p id="explanation">Infer an expression to inspect its type.</p>
-          <button id="diagnostic" hidden>Locate diagnostic</button>
-          <div id="counts"></div>
-          <p class="note">
-            An unconstrained type variable can stand for any type. Arrows associate to the right. ×
-            denotes a pair.
-          </p>
-        </section>
-      </div>
+        </div>
+
+        <p id="status" role="status" aria-live="polite"></p>
+      </section>
+      <section class="verdict" aria-live="polite">
+        <p class="eyebrow" id="verdict-label">PRINCIPAL TYPE</p>
+        <div id="principal">—</div>
+        <p id="explanation">Infer an expression to inspect its type.</p>
+        <button id="diagnostic" hidden>Locate diagnostic</button>
+        <div id="counts"></div>
+      </section>
       <section id="evidence" hidden>
-        <div class="section-head">
-          <h2>Follow the reasoning</h2>
-          <div class="exports">
-            <button id="save">Save folio</button><button id="report">Export evidence</button>
-          </div>
+        <div class="evidence-title">
+          <h2>Unification</h2>
+          <button id="report">Export evidence</button>
         </div>
         <div id="trace-controls" class="trace-controls">
           <button id="previous" aria-label="Previous constraint">←</button
@@ -132,8 +125,13 @@
           </div>
         </details>
       </section>
-      <details class="grammar">
-        <summary>The small language / grammar &amp; limits</summary>
+    </main>
+    <dialog id="language-panel" aria-labelledby="language-title">
+      <div class="dialog-heading">
+        <h2 id="language-title">Language reference</h2>
+        <button id="language-close" aria-label="Close language reference">×</button>
+      </div>
+      <section class="grammar">
         <div class="grammar-grid">
           <div>
             <h3>Expressions</h3>
@@ -152,7 +150,7 @@ fst pair  /  snd pair</pre
             </p>
           </div>
           <div>
-            <h3>Deliberately small</h3>
+            <h3>Supported model</h3>
             <p>
               Nonrecursive let-polymorphism, monomorphic lambda parameters, and an occurs check. No
               mutation, recursion, strings, lists, type classes, subtyping, or evaluation. Type
@@ -169,8 +167,7 @@ fst pair  /  snd pair</pre
             </p>
           </div>
         </div>
-      </details>
-    </main>
-    <footer><span>UNKNOWN ≠ UNKNOWABLE</span><span>HINDLEY–MILNER / LOCAL WORKBENCH</span></footer>
+      </section>
+    </dialog>
   </body>
 </html>

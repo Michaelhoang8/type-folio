@@ -4,6 +4,10 @@ An interactive Hindley–Milner type-inference workbench. Enter a small function
 
 ![Type Folio](docs/workbench.png)
 
+## Interface
+
+The expression editor leads the page, followed by a prominent principal type and a compact unification trace. Syntax coloring is a read-only DOM overlay behind the native textarea; source text, selection, and editing remain native. The overlay uses text nodes rather than interpreting input as HTML. Let-binding and expression-type tables expand below the trace, and the language reference opens in a separate dialog.
+
 ## Run
 
 Requires Python 3.10+. No runtime dependencies or API keys.
@@ -70,3 +74,5 @@ python -m unittest discover -s tests -v
 Fifteen core tests cover known principal types, fresh instantiation, captured-variable generalization, environment substitutions, direct/indirect occurs checks, shadowing, nonrecursive scope, projection schemes, precedence, exact spans, reporting, and resource limits. A deterministic generator checks 200 ground programs against a separate compositional type oracle. One HTTP test covers static assets, HEAD, hidden-file rejection, and Host validation. CI runs Ubuntu Node 22/24 and Windows Node 24.
 
 Manual browser checks covered constraint stepping, source highlighting, infinite-type errors, captured-variable schemes, expression inspection, diagnostic navigation after an earlier successful constraint, and downloads. Independent Python checks verified exported default equations/spans and exact Unicode/CRLF session round-trip.
+
+The expression-first redesign was browser-checked at desktop and 390-pixel widths, including syntax-overlay text/wrapping, constraint stepping, occurs-check diagnostics, custom source edits, and reference-dialog Escape. All fifteen inference tests pass.
