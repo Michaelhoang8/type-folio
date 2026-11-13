@@ -1,0 +1,4 @@
+{
+  "version": 1,
+  "source": "-- 🐚\r\nlet id = fun x -> x in\r\n(id 7,id false)"
+}

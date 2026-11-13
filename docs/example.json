@@ -1,0 +1,4 @@
+{
+  "version": 1,
+  "source": "-- One definition, two independent instantiations.\nlet identity = fun x -> x in\n(identity 42, identity true)"
+}

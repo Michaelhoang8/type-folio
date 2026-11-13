@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Type Folio</title>
+    <link rel="stylesheet" href="style.css" />
+    <script type="module" src="app.js"></script>
+  </head>
+  <body>
+    <header>
+      <a href="#">type folio<span>↳</span></a
+      ><span class="edition">PROGRAMMING LANGUAGES / STUDY NO. 01</span
+      ><label class="file"
+        >Open folio<input
+          id="file"
+          type="file"
+          accept="application/json,.json"
+          aria-label="Open folio"
+      /></label>
+    </header>
+    <main>
+      <section class="intro">
+        <p class="eyebrow">READ BETWEEN THE TYPES</p>
+        <h1>A little code.<br />A lot implied.</h1>
+        <p class="lede">Follow an expression from unknowns<br />to its most general type.</p>
+      </section>
+      <div class="workspace">
+        <section class="source">
+          <div class="section-head">
+            <label for="example">Start with a study</label
+            ><select id="example">
+              <option value="polymorphism">One function, two types</option>
+              <option value="composition">Function composition</option>
+              <option value="captured">Captured variables</option>
+              <option value="mismatch">Conflicting branches</option>
+              <option value="occurs">An infinite type</option>
+              <option value="lambda">The lambda boundary</option>
+            </select>
+          </div>
+          <label class="sr-only" for="source">Source expression</label
+          ><textarea
+            id="source"
+            spellcheck="false"
+            maxlength="12000"
+            aria-describedby="source-note"
+          ></textarea>
+          <div class="actions">
+            <button id="infer" class="primary">Infer types ↗</button
+            ><button id="cancel" disabled>Cancel</button
+            ><span id="source-note">Local analysis · no code execution</span>
+          </div>
+          <p id="status" role="status" aria-live="polite"></p>
+        </section>
+        <section class="verdict" aria-live="polite">
+          <p class="eyebrow" id="verdict-label">PRINCIPAL TYPE</p>
+          <div id="principal">—</div>
+          <p id="explanation">Infer an expression to inspect its type.</p>
+          <button id="diagnostic" hidden>Locate diagnostic</button>
+          <div id="counts"></div>
+          <p class="note">
+            An unconstrained type variable can stand for any type. Arrows associate to the right. ×
+            denotes a pair.
+          </p>
+        </section>
+      </div>
+      <section id="evidence" hidden>
+        <div class="section-head">
+          <h2>Follow the reasoning</h2>
+          <div class="exports">
+            <button id="save">Save folio</button><button id="report">Export evidence</button>
+          </div>
+        </div>
+        <div id="trace-controls" class="trace-controls">
+          <button id="previous" aria-label="Previous constraint">←</button
+          ><label for="step">Constraint <output id="step-label"></output></label
+          ><input id="step" type="range" min="0" value="0" aria-label="Constraint step" /><button
+            id="next"
+            aria-label="Next constraint"
+          >
+            →
+          </button>
+        </div>
+        <div class="reasoning">
+          <div>
+            <p id="reason" class="eyebrow"></p>
+            <div id="equation"></div>
+            <p id="resolution"></p>
+            <p id="location" class="note"></p>
+          </div>
+          <pre id="excerpt" aria-label="Source with selected expression"></pre>
+        </div>
+        <details>
+          <summary>Let bindings &amp; generalization <span id="binding-count"></span></summary>
+          <p class="note">
+            Schemes are captured at each let binding, before its body is checked. Quantified
+            variables get fresh instances on every use; variables captured from the environment stay
+            shared.
+          </p>
+          <div class="scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th>Binding</th>
+                  <th>Scheme at binding</th>
+                  <th>Quantified variables</th>
+                  <th>Source</th>
+                </tr>
+              </thead>
+              <tbody id="bindings"></tbody>
+            </table>
+          </div>
+        </details>
+        <details>
+          <summary>Expression types <span id="node-count"></span></summary>
+          <p class="note">
+            Completed expressions only. A failed analysis may leave partial types. Names in this
+            table and the constraint trace share an allocation history; principal types and binding
+            schemes use local variable names.
+          </p>
+          <div class="scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th>Expression</th>
+                  <th>Kind</th>
+                  <th>Inferred type</th>
+                </tr>
+              </thead>
+              <tbody id="nodes"></tbody>
+            </table>
+          </div>
+        </details>
+      </section>
+      <details class="grammar">
+        <summary>The small language / grammar &amp; limits</summary>
+        <div class="grammar-grid">
+          <div>
+            <h3>Expressions</h3>
+            <pre>
+let name = expression in expression
+fun name -&gt; expression
+if condition then yes else no
+function argument
+(first, second)
+fst pair  /  snd pair</pre
+            >
+            <p>
+              Integers, booleans, names, parentheses, +, −, *, and integer-only ==. Application
+              binds tighter than multiplication, then addition/subtraction, then equality. Use
+              parentheses around negative function arguments. Comments start with --.
+            </p>
+          </div>
+          <div>
+            <h3>Deliberately small</h3>
+            <p>
+              Nonrecursive let-polymorphism, monomorphic lambda parameters, and an occurs check. No
+              mutation, recursion, strings, lists, type classes, subtyping, or evaluation. Type
+              checking does not execute the program.
+            </p>
+            <p>
+              12,000 UTF-16 code units; 1,500 tokens; 500 expression nodes; bounded parser/inference
+              nesting and unification work. Large displayed types are abbreviated with …, while
+              analysis uses the complete type graph.
+            </p>
+            <p>
+              Save a folio before refreshing. Imported line endings remain exact until you edit the
+              source, when the browser may normalize them.
+            </p>
+          </div>
+        </div>
+      </details>
+    </main>
+    <footer><span>UNKNOWN ≠ UNKNOWABLE</span><span>HINDLEY–MILNER / LOCAL WORKBENCH</span></footer>
+  </body>
+</html>
