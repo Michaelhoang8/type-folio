@@ -8,6 +8,10 @@ An interactive Hindley–Milner type-inference workbench. Enter a small function
 
 The expression editor leads the page, followed by a prominent principal type and a compact unification trace. Syntax coloring is a read-only DOM overlay behind the native textarea; source text, selection, and editing remain native. The overlay uses text nodes rather than interpreting input as HTML. Let-binding and expression-type tables expand below the trace, and the language reference opens in a separate dialog.
 
+Unification equations separate their left and right types and color primitive types, variables, and operators. Constraint changes and completed verdicts use brief transitions that respect reduced-motion preferences. The underlying type text and source spans remain unchanged.
+
+![Unification trace](docs/unification.png)
+
 ## Run
 
 Requires Python 3.10+. No runtime dependencies or API keys.

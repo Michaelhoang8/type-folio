@@ -55,6 +55,36 @@ function highlight(start, end) {
   );
   $('location').textContent = location(start, end);
 }
+function equation(left, right) {
+  const term = (value) => {
+    const part = el('span');
+    part.className = 'type-term';
+    for (const token of value.split(/(\bint\b|\bbool\b|'[a-z][a-z0-9]*|→|×)/g)) {
+      const piece = el('span', token);
+      piece.className =
+        token === 'int' || token === 'bool'
+          ? 'type-primitive'
+          : token.startsWith("'")
+            ? 'type-variable'
+            : token === '→' || token === '×'
+              ? 'type-operator'
+              : '';
+      part.append(piece);
+    }
+    return part;
+  };
+  const relation = el('span', '≐');
+  relation.className = 'type-relation';
+  $('equation').replaceChildren(term(left), relation, term(right));
+  if (!matchMedia('(prefers-reduced-motion: reduce)').matches)
+    $('equation').animate(
+      [
+        { opacity: 0.4, transform: 'translateY(3px)' },
+        { opacity: 1, transform: 'translateY(0)' },
+      ],
+      { duration: 200, easing: 'ease-out' },
+    );
+}
 function showStep() {
   if (!result) return;
   const row = result.trace[step];
@@ -65,7 +95,7 @@ function showStep() {
     : 'none';
   if (row) {
     $('reason').textContent = row.reason;
-    $('equation').textContent = `${row.left} ≐ ${row.right}`;
+    equation(row.left, row.right);
     $('resolution').textContent =
       row.status === 'unified'
         ? `Unified as ${row.result}. Names reflect the state at this constraint.`
@@ -121,6 +151,8 @@ function render() {
     : result.error.message + ' ' + location(result.error.start, result.error.end);
   $('counts').textContent =
     `${result.nodes.length} completed expressions · ${result.trace.length} constraints · ${result.bindings.length} let bindings`;
+  if (!matchMedia('(prefers-reduced-motion: reduce)').matches)
+    $('principal').animate([{ opacity: 0.3 }, { opacity: 1 }], { duration: 350 });
   $('binding-count').textContent = `/ ${result.bindings.length}`;
   $('node-count').textContent = `/ ${result.nodes.length}`;
   $('bindings').replaceChildren();
